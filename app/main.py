@@ -52,3 +52,5 @@ def root():
 # So we can keep track of the changes just like GIT we can also get current file with alembic direct as well as downgrade(delete) with -1 and upgrade to wiht +1
 
 # We can also autogenerate our version via alembic, so alembic does this in such a way that it mirrors the models and database and then create this, what you'd have to do is to upgrade the changes so it can reflect on your tables 
+
+# We'd use git push heroku main to push our changes to heroku
