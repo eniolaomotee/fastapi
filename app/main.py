@@ -29,7 +29,7 @@ app.include_router(votes.router)
 
 @app.get("/")
 def root():
-    return {"message":"Hello there"}
+    return {"message":"Hello there!!!"}
 
 # Middleware is a function that runs before any of our requests
 
