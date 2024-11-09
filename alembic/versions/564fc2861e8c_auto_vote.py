@@ -27,9 +27,6 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('user_id', 'post_id')
     )
-    op.drop_table('books')
-    op.drop_table('product')
-    op.drop_table('employees')
     op.alter_column('users', 'email',
                existing_type=sa.INTEGER(),
                type_=sa.String(),
@@ -43,33 +40,6 @@ def downgrade() -> None:
                existing_type=sa.String(),
                type_=sa.INTEGER(),
                existing_nullable=False)
-    op.create_table('employees',
-    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
-    sa.Column('first_name', sa.VARCHAR(), autoincrement=False, nullable=False),
-    sa.Column('last_name', sa.VARCHAR(), autoincrement=False, nullable=False),
-    sa.Column('position', sa.VARCHAR(), autoincrement=False, nullable=False),
-    sa.Column('salary', sa.INTEGER(), autoincrement=False, nullable=False),
-    sa.Column('hire_date', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
-    sa.PrimaryKeyConstraint('id', name='employee_pkey')
-    )
-    op.create_table('product',
-    sa.Column('name', sa.VARCHAR(), autoincrement=False, nullable=False),
-    sa.Column('price', sa.INTEGER(), autoincrement=False, nullable=False),
-    sa.Column('is_sale', sa.BOOLEAN(), server_default=sa.text('false'), autoincrement=False, nullable=False),
-    sa.Column('inventory', sa.INTEGER(), autoincrement=False, nullable=False),
-    sa.Column('created_at', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
-    sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
-    sa.PrimaryKeyConstraint('id', name='product_pkey')
-    )
-    op.create_table('books',
-    sa.Column('book_id', sa.INTEGER(), autoincrement=True, nullable=False),
-    sa.Column('title', sa.VARCHAR(), autoincrement=False, nullable=False),
-    sa.Column('author', sa.VARCHAR(), autoincrement=False, nullable=False),
-    sa.Column('genre', sa.VARCHAR(), autoincrement=False, nullable=False),
-    sa.Column('published_year', postgresql.TIMESTAMP(timezone=True), server_default=sa.text('now()'), autoincrement=False, nullable=False),
-    sa.Column('price', sa.INTEGER(), autoincrement=False, nullable=False),
-    sa.Column('copies_available', sa.INTEGER(), autoincrement=False, nullable=False),
-    sa.PrimaryKeyConstraint('book_id', name='books_pkey')
-    )
+    
     op.drop_table('votes')
     # ### end Alembic commands ###
