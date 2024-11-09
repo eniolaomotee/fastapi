@@ -97,3 +97,7 @@
 
 
 
+# So when deploying your code to heroku you'd need to create a Procfile, this specifies the params for the entry point of your code as well as the server and port, we'd push this changes to github and also using "git push heroku main" we'd push it to heroku
+
+
+# We use heroku ps:restart to restart our heroku application
