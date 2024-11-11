@@ -41,5 +41,7 @@ def get_db():
 #         print("Connecting to DB failed")
 #         print("Error",error)
 #         time.sleep(2)
-        
-    
+
+
+
+# Push out changes to git
