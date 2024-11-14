@@ -1,0 +1,51 @@
+# Using docker compose to spin up your app and config, to do this you'd need to  generate a yml file.
+# <port on container> the port you're using in your dockerfile
+# port on localhost> the port on your machine, would redirect all requests to 8000
+
+# So for docker you'd need to containrize your application using it, you'd define your dockerfile on how you want commands on your docker container to be executed after each change which includes installing your requirements txt after each deployment which is something you don't want so you'd specify it there, as copying the files to the container and setting up the commands to run the file. We also have the docker-compose which is used for stating how the app should be built such as the version, services, ports and environment, if you make any chnage on your docker file you'd need to rebuild and if you want to stop the container from running you can use docker down.
+# When it comes to data in a container that data doesn't persist as soon as the container goes down, so we'd want it to persist even after we kill our container., so we can do this through volume
+
+# We also need to figure out the host and the IP address of our DB, docker compose creates a custom network and it uses DNS,and we can try to reach the name postgres and it resolved to our postgres service and it would reference this and would allow the container to know that when you want to talk to the db it should resolve to the IP address of the container.
+
+version: '3'
+services:
+  api:
+    image: eniolaomotee/fastapi
+    depends_on:
+      - postgres
+    ports: 
+      - 80:8000
+    
+    # command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    # env_file: 
+    #   - ./.env
+    environment:
+      - DATABASE_HOSTNAME=${DATABASE_HOSTNAME}
+      -  DATABASE_PORT=${DATABASE_PORT}
+      -  DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      -  DATABASE_NAME=${DATABASE_NAME}
+      -  DATABASE_USERNAME=${DATABASE_USERNAME}
+      -  SECRET_KEY= ${SECRET_KEY}
+      -  ALGORITHM=${ALGORITHM}
+      -  ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+
+volumes:
+  postgres-db:
+
+
+
+
+
+# docker-compose -f docker-compose-dev.yml up -d   
+# docker-compose -f docker-compose-dev.yml up -d
+# docker-compose -f docker-compose-dev.yml down

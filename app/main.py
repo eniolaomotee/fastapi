@@ -1,6 +1,4 @@
 from fastapi import FastAPI
-from .database import engine
-from . import models
 from .routers import post,user,auth,votes
 from .config import settings
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,4 +27,14 @@ app.include_router(votes.router)
 
 @app.get("/")
 def root():
-    return {"message":"Hello World!!!"}
+    return {"message":"Hello World"}
+
+
+
+
+
+
+# Dockerizing our application
+# You'd have to create an image that would contain your codes amongst others
+
+# Bind mount(volume) - allows us to sync with a folder on our local machine with a folder on our container
