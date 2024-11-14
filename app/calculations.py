@@ -86,3 +86,20 @@ class BankAccount():
 #   pull_request:
 #     branches:
 #       - "test_branch"
+
+
+
+
+# name: Build and Deploy Code
+
+# on: [push, pull_request]
+
+# jobs:
+#   job1: 
+#       runs-on: ubuntu-latest
+#     steps: 
+#       - name: pulling git repo
+#         uses: actions/checkout@v4
+#       - name: say hi to eniola
+#         run: echo "Hello Omotee"
+
