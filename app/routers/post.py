@@ -173,7 +173,13 @@ def update_post(id:int,updated_post:schemas.PostCreate, db: Session=Depends(get_
     db.commit()
     
     updated_post_with_votes = post_query.first()
-    return updated_post_with_votes
+    if updated_post_with_votes:
+        post_data,votes_count = updated_post_with_votes
+        response_data ={
+            "Post": post_data,
+            "votes": votes_count
+        }
+    return response_data
     
     # # Updating post with SQL QUERIES
     # cursor.execute(""" UPDATE posts SET title =%s,content=%s, published=%s WHERE id=%s RETURNING *""",(post.title,post.content,post.published, str(id)))
