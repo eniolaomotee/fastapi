@@ -151,11 +151,29 @@ def update_post(id:int,updated_post:schemas.PostCreate, db: Session=Depends(get_
     
     post_query = db.query(models.Post,func.count(models.Vote.post_id).label("votes")).join(models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id).filter(models.Post.id == id)
     
-    print(post_query)
     
-    post = post_query.first()
-    print(post)
+    # Extract the post and vote count from the query
+    post_with_votes = post_query.first()
     
+    if post_with_votes is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Post with id:{id} does not exist")
+    
+    # Seperate the post instance and votes count from the query results
+    post, votes_count = post_with_votes
+    
+    
+    # Check if the post owner is the current user
+    if post.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Not authorized to perform requested action")
+    
+    # Update only the 'post' instance 
+    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post_query.update(updated_post.dict(), synchronize_session=False)
+    
+    db.commit()
+    
+    updated_post_with_votes = post_query.first()
+    return updated_post_with_votes
     
     # # Updating post with SQL QUERIES
     # cursor.execute(""" UPDATE posts SET title =%s,content=%s, published=%s WHERE id=%s RETURNING *""",(post.title,post.content,post.published, str(id)))
@@ -165,16 +183,16 @@ def update_post(id:int,updated_post:schemas.PostCreate, db: Session=Depends(get_
     # conn.commit()
     
     
-    if post == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"post with id:{id} does not exist")
+    # if post == None:
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"post with id:{id} does not exist")
     
-    if post.owner_id == current_user.id:
-        raise HTTPException(detail="Testing")
+    # if post.owner_id == current_user.id:
+    #     raise HTTPException(detail="Testing")
         # raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail=f"Not Authorized to perform requested action")
     
-    post_query.update(updated_post.dict(),synchronize_session=False)
+    # post.update(updated_post.dict(),synchronize_session=False)
     
-    db.commit()
+    # db.commit()
     
     # Updating Our Post with Normal code with the id 
     # for index,posts in enumerate(my_posts):
@@ -184,7 +202,7 @@ def update_post(id:int,updated_post:schemas.PostCreate, db: Session=Depends(get_
     #         my_posts[index]= post_dict 
             
     #         return {"messge":"Post updated successfully", "post":post_dict}
-    return  post_query.first()
+    # return  post_query.first()
 
 
 
